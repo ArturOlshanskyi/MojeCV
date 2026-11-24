@@ -1,0 +1,22 @@
+@model IEnumerable<MojeCV.Models.Service>
+@{ ViewData["Title"] = "Usługi"; }
+<div class="page-heading"><div><span class="eyebrow">Katalog</span><h1>Wybierz usługę</h1></div></div>
+<div class="service-grid">
+@foreach (var service in Model)
+{
+  <article class="service-card">
+    <div class="service-icon">✦</div>
+    <h2>@service.Name</h2>
+    <p>@service.Description</p>
+    <div class="service-meta"><span>@service.DurationMinutes min</span><strong>@service.Price.ToString("0.00") zł</strong></div>
+    @if (User.Identity?.IsAuthenticated == true)
+    {
+      <a asp-controller="Reservations" asp-action="Create" asp-route-serviceId="@service.Id" class="btn btn-primary w-100">Zarezerwuj</a>
+    }
+    else
+    {
+      <a asp-controller="Account" asp-action="Login" asp-route-returnUrl="/Reservations/Create?serviceId=@service.Id" class="btn btn-primary w-100">Zaloguj i zarezerwuj</a>
+    }
+  </article>
+}
+</div>

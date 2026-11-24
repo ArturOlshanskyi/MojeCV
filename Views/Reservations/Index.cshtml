@@ -1,0 +1,66 @@
+@model IEnumerable<MojeCV.Models.Reservation>
+@{
+    ViewData["Title"] = "Moje rezerwacje";
+}
+
+<div class="page-heading">
+    <div><span class="eyebrow">Panel użytkownika</span><h1>Moje rezerwacje</h1></div>
+    <a asp-controller="Services" asp-action="Index" class="btn btn-primary">Nowa rezerwacja</a>
+</div>
+
+@if (TempData["Success"] is string success)
+{
+    <div class="alert alert-success">@success</div>
+}
+@if (TempData["Error"] is string error)
+{
+    <div class="alert alert-danger">@error</div>
+}
+
+<div class="reservation-list">
+@foreach (var item in Model)
+{
+    var statusClass = item.Status switch
+    {
+        MojeCV.Models.ReservationStatus.Approved => "success",
+        MojeCV.Models.ReservationStatus.Pending => "warning",
+        MojeCV.Models.ReservationStatus.Rejected => "danger",
+        _ => "secondary"
+    };
+
+    <article class="reservation-row">
+        <div>
+            <span class="status-badge @statusClass">@item.Status</span>
+            <h2>@item.Service?.Name</h2>
+            <p>@item.ReservationSlot?.StartTime.ToString("dd.MM.yyyy, HH:mm")</p>
+            @if (!string.IsNullOrWhiteSpace(item.Notes))
+            {
+                <small class="text-muted">@item.Notes</small>
+            }
+        </div>
+        <div class="actions">
+            @if (item.Status != MojeCV.Models.ReservationStatus.Approved
+                 && item.Status != MojeCV.Models.ReservationStatus.Cancelled)
+            {
+                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-primary btn-sm">Edytuj</a>
+            }
+            @if (item.Status != MojeCV.Models.ReservationStatus.Cancelled)
+            {
+                <form asp-action="Cancel" method="post" class="d-inline">
+                    <input type="hidden" name="id" value="@item.Id" />
+                    <button type="submit" class="btn btn-outline-danger btn-sm confirm-cancel">Anuluj</button>
+                </form>
+            }
+        </div>
+    </article>
+}
+
+@if (!Model.Any())
+{
+    <div class="empty-state">
+        <h2>Nie masz jeszcze rezerwacji</h2>
+        <p>Wybierz usługę i zarezerwuj pierwszy termin.</p>
+        <a asp-controller="Services" asp-action="Index" class="btn btn-primary">Przeglądaj usługi</a>
+    </div>
+}
+</div>

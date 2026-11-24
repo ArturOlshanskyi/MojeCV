@@ -1,0 +1,22 @@
+@model MojeCV.ViewModels.ReservationCreateViewModel
+@{ ViewData["Title"] = "Nowa rezerwacja"; var slots = ViewBag.Slots as IEnumerable<MojeCV.Models.ReservationSlot>; }
+<div class="page-heading"><div><span class="eyebrow">Rezerwacja</span><h1>@Model.ServiceName</h1></div></div>
+<div class="form-card mx-auto reservation-form">
+  <form asp-action="Create" method="post" id="reservation-form">
+    <input type="hidden" asp-for="ServiceId" /><input type="hidden" asp-for="ServiceName" />
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+    <fieldset class="mb-4"><legend class="form-label">Wybierz dostępny termin</legend>
+      <div class="slot-grid">
+      @foreach (var slot in slots ?? Enumerable.Empty<MojeCV.Models.ReservationSlot>())
+      {
+        <label class="slot-option"><input type="radio" name="ReservationSlotId" value="@slot.Id" @(Model.ReservationSlotId == slot.Id ? "checked" : "") /><span><strong>@slot.StartTime.ToString("dd.MM.yyyy")</strong><small>@slot.StartTime.ToString("HH:mm")</small></span></label>
+      }
+      </div>
+      <span asp-validation-for="ReservationSlotId" class="text-danger"></span>
+      @if (slots == null || !slots.Any()) { <div class="alert alert-warning">Brak wolnych terminów dla tej usługi.</div> }
+    </fieldset>
+    <div class="mb-3"><label asp-for="Notes" class="form-label"></label><textarea asp-for="Notes" class="form-control" rows="3" placeholder="Opcjonalna informacja dla salonu"></textarea><span asp-validation-for="Notes" class="text-danger"></span></div>
+    <button type="submit" class="btn btn-primary w-100">Wyślij rezerwację</button>
+  </form>
+</div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

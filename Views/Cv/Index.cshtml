@@ -1,0 +1,64 @@
+@model MojeCV.ViewModels.CvViewModel
+@{
+    ViewData["Title"] = "Moje CV";
+}
+
+<header class="mb-4">
+    <h1>@Model.Osoba.Imie @Model.Osoba.Nazwisko</h1>
+    <p class="lead">@Model.Osoba.Stanowisko</p>
+    <p class="text-muted">@Model.Osoba.Email · @Model.Osoba.Miasto</p>
+    <p>@Model.Osoba.OMnie</p>
+</header>
+
+<section class="mb-4">
+    <h2>Doświadczenie</h2>
+    @foreach (var d in Model.Doswiadczenia.OrderByDescending(d => d.DataOd))
+    {
+        <div class="mb-3">
+            <h5>@d.Stanowisko — @d.Firma</h5>
+            <small class="text-muted">
+                @d.DataOd.ToString("MM.yyyy") – @(d.DataDo?.ToString("MM.yyyy") ?? "obecnie")
+                (@d.CzasTrwania)
+            </small>
+            <p>@d.Opis</p>
+        </div>
+    }
+</section>
+
+<section class="mb-4">
+    <h2>Wykształcenie</h2>
+    @foreach (var e in Model.Wyksztalcenia.OrderByDescending(e => e.DataOd))
+    {
+        <div class="mb-3">
+            <h5>@e.Uczelnia</h5>
+            <p class="mb-1"><strong>@e.Kierunek</strong> @(!string.IsNullOrWhiteSpace(e.Poziom) ? $"· {e.Poziom}" : "")</p>
+            <small class="text-muted">
+                @e.DataOd.ToString("MM.yyyy") – @(e.DataDo?.ToString("MM.yyyy") ?? "obecnie")
+            </small>
+        </div>
+    }
+</section>
+
+<section>
+    <h2>Umiejętności</h2>
+    @foreach (var grupa in Model.Umiejetnosci.GroupBy(u => u.Kategoria))
+    {
+        <div class="mb-4">
+            <h4>@grupa.Key</h4>
+
+            @foreach (var u in grupa)
+            {
+                <div class="mb-2">
+                    <div class="d-flex justify-content-between">
+                        <span>@u.Nazwa</span>
+                        <small>@u.Poziom/5</small>
+                    </div>
+                    <div class="progress" style="height: 12px;">
+                        <div class="progress-bar" role="progressbar" style="width: @(u.Poziom * 20)%" aria-valuenow="@u.Poziom" aria-valuemin="0" aria-valuemax="5">
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</section>

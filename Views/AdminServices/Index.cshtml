@@ -1,0 +1,4 @@
+@model IEnumerable<MojeCV.Models.Service>
+@{ ViewData["Title"] = "Usługi — administrator"; }
+<div class="page-heading"><div><span class="eyebrow">Administracja</span><h1>Usługi</h1></div><a asp-action="Create" class="btn btn-primary">Dodaj usługę</a></div>
+<div class="table-responsive admin-table"><table class="table align-middle"><thead><tr><th>Nazwa</th><th>Cena</th><th>Czas</th><th>Status</th><th>Akcje</th></tr></thead><tbody>@foreach(var s in Model){<tr><td><strong>@s.Name</strong><br/><small>@s.Description</small></td><td>@s.Price.ToString("0.00") zł</td><td>@s.DurationMinutes min</td><td>@(s.IsActive ? "Aktywna" : "Nieaktywna")</td><td><a asp-action="Edit" asp-route-id="@s.Id" class="btn btn-outline-primary btn-sm">Edytuj</a><form asp-action="Delete" method="post" class="d-inline"><input type="hidden" name="id" value="@s.Id" /><button class="btn btn-outline-danger btn-sm confirm-delete">Usuń</button></form></td></tr>}</tbody></table></div>

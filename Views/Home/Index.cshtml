@@ -1,0 +1,20 @@
+﻿@{ ViewData["Title"] = "Strona główna"; }
+<section class="hero-section">
+  <div class="hero-copy">
+    <span class="eyebrow">Zarezerwuj termin online</span>
+    <h1>Piękno i profesjonalizm<br/>na jeden klik.</h1>
+    <p>Wybierz usługę, dobierz dogodny termin i śledź status swojej rezerwacji.</p>
+    <div class="hero-actions">
+      <a asp-controller="Services" asp-action="Index" class="btn btn-accent btn-lg">Zobacz usługi</a>
+      @if (User.Identity?.IsAuthenticated != true) { <a asp-controller="Account" asp-action="Register" class="btn btn-outline-light btn-lg">Załóż konto</a>; }
+    </div>
+  </div>
+  <div class="hero-card" aria-label="Statystyka rezerwacji">
+    <span>Twój komfort</span><strong>9:00—18:00</strong><small>elastyczne terminy</small>
+  </div>
+</section>
+<section class="feature-grid">
+  <article><span>01</span><h2>Wybierz usługę</h2><p>Sprawdź opis, cenę i czas trwania.</p></article>
+  <article><span>02</span><h2>Wybierz termin</h2><p>System pokaże tylko wolne godziny.</p></article>
+  <article><span>03</span><h2>Śledź status</h2><p>Zarządzaj rezerwacją z poziomu konta.</p></article>
+</section>
